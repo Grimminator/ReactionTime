@@ -1,0 +1,67 @@
+<html>
+<head>
+  <title>Reaction Time</title>
+</head>
+<body>
+  <p> Hello My Name is Reaction Tim
+  </p>
+  <style>
+  .disabled {
+    opacity: .2;
+    pointer-events: none;
+  }
+  </style>
+
+  <h1 id="title"></h1>
+  <button  id = "button"></button>
+
+  <script>
+  (async function() {
+var btn = document.querySelector("#button");
+var title = document.querySelector("#title");
+
+  async function executeAwait(callback, duration) {
+    await new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        callback();
+        resolve();
+      }, duration);
+    });
+  }
+
+async function init() {
+  title.innerHTML = "Ready";
+  btn.innerHTML = "Start";
+      btn.classList.add("disabled");
+
+  await executeAwait(function() {
+    title.innerHTML = "Set";
+  }, 1000);
+
+  await executeAwait(function() {
+    title.innerHTML = "Go!";
+    btn.innerHTML = "Stop";
+    btn.classList.remove("disabled");
+    var startTime = performance.now();
+
+    btn.onclick = function() {
+      var diff = performance.now() - startTime;
+      title.innerHTML = "Woah, that took " + diff / 1000 + "seconds, try again?";
+      btn.onclick = null;
+      localStorage.setItem("taken", "true");
+    }
+  }, 1000);
+}
+
+if (!localStorage.getItem("taken")) {
+  init();
+} else {
+  title.innerHTML = "Youu've already taken this, you can't take ita again";
+}
+})();
+
+
+  </script>
+
+</body>
+</html>
